@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- ЗАГОЛОВОК -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DynamicLayout3"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#2196F3"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="#E3F2FD" />
+
+    <!-- ПОЛЗУНОК -->
+    <SeekBar
+        android:id="@+id/sbWeight"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:max="100"
+        android:progress="50"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <!-- КОНТЕЙНЕР ДЛЯ КНОПОК -->
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <!-- ЛЕВАЯ КНОПКА -->
+        <Button
+            android:id="@+id/btn1"
+            android:layout_height="wrap_content"
+            android:text="ЛЕВО"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:backgroundTint="#4CAF50"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- ПРАВАЯ КНОПКА -->
+        <Button
+            android:id="@+id/btn2"
+            android:layout_height="wrap_content"
+            android:text="ПРАВО"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:backgroundTint="#FF5722"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
