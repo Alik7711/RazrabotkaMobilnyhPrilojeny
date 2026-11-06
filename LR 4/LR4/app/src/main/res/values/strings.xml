@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Lab04</string>
+    <string name="screen_title">Учебная заметка</string>
+    <string name="note_sample">Подготовить отчёт по Android</string>
+    <string name="note_empty">Заметка пуста</string>
+    <string name="actions">Действия</string>
+    <string name="action_clear">Очистить</string>
+    <string name="action_restore">Восстановить пример</string>
+    <string name="action_copy">Копировать</string>
+    <string name="message_cleared">Заметка очищена</string>
+    <string name="message_restored">Пример восстановлен</string>
+    <string name="message_copied">Заметка скопирована</string>
+    <string name="dark_theme">Тёмная тема</string>
+    <string name="note_actions">Действия с заметкой</string>
+    <string name="clipboard_label">Учебная заметка</string>
+</resources>

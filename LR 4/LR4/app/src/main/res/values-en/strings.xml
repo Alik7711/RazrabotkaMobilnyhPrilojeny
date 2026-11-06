@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Lab04</string>
+    <string name="screen_title">Study note</string>
+    <string name="note_sample">Prepare the Android lab report</string>
+    <string name="note_empty">The note is empty</string>
+    <string name="actions">Actions</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_restore">Restore sample</string>
+    <string name="action_copy">Copy</string>
+    <string name="message_cleared">Note cleared</string>
+    <string name="message_restored">Sample restored</string>
+    <string name="message_copied">Note copied</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="note_actions">Note actions</string>
+    <string name="clipboard_label">Study note</string>
+</resources>
