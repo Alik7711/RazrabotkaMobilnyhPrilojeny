@@ -1,14 +1,12 @@
 package ru.example.lab09
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-data class Task(
-    val id: Long,
-    val title: String,
-    val done: Boolean
-)
+data class Task(val id: Int, val title: String, val done: Boolean, val priority: Int)
+data class PriorityCount(val priority: Int, val count: Int)
 
 class TasksDb(context: Context) : SQLiteOpenHelper(context, "tasks.db", null, 1) {
 
@@ -17,30 +15,60 @@ class TasksDb(context: Context) : SQLiteOpenHelper(context, "tasks.db", null, 1)
             CREATE TABLE tasks (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
-                done INTEGER NOT NULL DEFAULT 0
+                done INTEGER NOT NULL DEFAULT 0,
+                priority INTEGER NOT NULL DEFAULT 1
             )
         """.trimIndent())
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS tasks")
-        onCreate(db)
+        // Миграция для ЛР 10
     }
 
-    fun add(title: String) {
-        val db = writableDatabase
-        db.execSQL("INSERT INTO tasks (title, done) VALUES (?, 0)", arrayOf(title))
+    fun add(title: String, priority: Int) {
+        val values = ContentValues().apply {
+            put("title", title)
+            put("priority", priority)
+            put("done", 0)
+        }
+        writableDatabase.insert("tasks", null, values)
     }
 
-    fun read(): List<Task> {
+    fun updateDone(id: Int, done: Boolean) {
+        val values = ContentValues().apply {
+            put("done", if (done) 1 else 0)
+        }
+        writableDatabase.update("tasks", values, "id = ?", arrayOf(id.toString()))
+    }
+
+    fun delete(id: Int) {
+        writableDatabase.delete("tasks", "id = ?", arrayOf(id.toString()))
+    }
+
+    fun read(doneFilter: Boolean?, priorityFilter: Int?): List<Task> {
+        var query = "SELECT id, title, done, priority FROM tasks WHERE 1=1"
+        val args = mutableListOf<String>()
+
+        if (doneFilter != null) {
+            query += " AND done = ?"
+            args.add(if (doneFilter) "1" else "0")
+        }
+        if (priorityFilter != null) {
+            query += " AND priority = ?"
+            args.add(priorityFilter.toString())
+        }
+
+        query += " ORDER BY title COLLATE NOCASE ASC"
+
         val list = mutableListOf<Task>()
-        readableDatabase.rawQuery("SELECT id, title, done FROM tasks ORDER BY id DESC", null).use { cursor ->
+        readableDatabase.rawQuery(query, args.toTypedArray()).use { cursor ->
             while (cursor.moveToNext()) {
                 list.add(
                     Task(
-                        id = cursor.getLong(0),
+                        id = cursor.getInt(0),
                         title = cursor.getString(1),
-                        done = cursor.getInt(2) == 1
+                        done = cursor.getInt(2) == 1,
+                        priority = cursor.getInt(3)
                     )
                 )
             }
@@ -48,14 +76,13 @@ class TasksDb(context: Context) : SQLiteOpenHelper(context, "tasks.db", null, 1)
         return list
     }
 
-    fun updateDone(id: Long, done: Boolean) {
-        val db = writableDatabase
-        val doneInt = if (done) 1 else 0
-        db.execSQL("UPDATE tasks SET done = ? WHERE id = ?", arrayOf(doneInt, id))
-    }
-
-    fun delete(id: Long) {
-        val db = writableDatabase
-        db.execSQL("DELETE FROM tasks WHERE id = ?", arrayOf(id))
+    fun countsByPriority(): List<PriorityCount> {
+        val list = mutableListOf<PriorityCount>()
+        readableDatabase.rawQuery("SELECT priority, COUNT(*) FROM tasks GROUP BY priority", null).use { cursor ->
+            while (cursor.moveToNext()) {
+                list.add(PriorityCount(cursor.getInt(0), cursor.getInt(1)))
+            }
+        }
+        return list
     }
 }
